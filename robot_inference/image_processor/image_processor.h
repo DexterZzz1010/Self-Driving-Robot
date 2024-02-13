@@ -1,0 +1,61 @@
+#ifndef IMAGE_PROCESSOR_H_
+#define IMAGE_PROCESSOR_H_
+
+/* for general */
+#include <cstdint>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <array>
+
+/* for OpenCV */
+#include <opencv2/opencv.hpp>
+
+/* for My modules */
+#include "image_processor_if.h"
+#include "camera_model.h"
+#include "object_detection.h"
+#include "lane_detection.h"
+#include "semantic_segmentation_engine.h"
+#include "depth_engine.h"
+
+namespace cv {
+    class Mat;
+};
+
+class ImageProcessor : public ImageProcessorIf {
+public:
+    ImageProcessor();
+    ~ImageProcessor() override;
+    int32_t Initialize(const InputParam& input_param) override;
+    int32_t Process(const cv::Mat& mat_original, Result& result) override;
+    int32_t Finalize(void) override;
+    int32_t Command(int32_t cmd) override;
+
+    void ResetCamera(int32_t width = 0, int32_t height = 0, float fov_deg = 130.0f) override;
+    void GetCameraParameter(float& focal_length, std::array<float, 3>& real_rvec, std::array<float, 3>& real_tvec, std::array<float, 3>& top_rvec, std::array<float, 3>& top_tvec) override;
+    void SetCameraParameter(float focal_length, const std::array<float, 3>& real_rvec, const std::array<float, 3>& real_tvec, const std::array<float, 3>& top_rvec, const std::array<float, 3>& top_tvec) override;
+
+private:
+    void DrawFps(cv::Mat& mat, double time_inference, double time_draw, cv::Point pos, double font_scale, int32_t thickness, cv::Scalar color_front, cv::Scalar color_back, bool is_text_on_rect = true);
+    cv::Scalar GetColorForSegmentation(int32_t id);
+    void CreateTransformMat();
+    float CreateTopViewMat(const cv::Mat& mat_original, cv::Mat& mat_topview);
+    float DrawSegmentation(cv::Mat& mat_segmentation, const SemanticSegmentationEngine::Result& segmentation_result);
+    void DrawDepth(cv::Mat& mat, const DepthEngine::Result& depth_result);
+
+
+private:
+    int32_t frame_cnt_;
+    CameraModel camera_real_;
+    CameraModel camera_top_;
+    cv::Mat mat_transform_;
+    int32_t vanishment_y_;
+
+    ObjectDetection object_detection_;
+    LaneDetection lane_detection_;
+    SemanticSegmentationEngine segmentation_engine_;
+    DepthEngine depth_engine_;
+};
+
+#endif

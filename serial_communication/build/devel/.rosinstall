@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/agx/catkin_ws/src/serial_communication/build/devel/setup.sh

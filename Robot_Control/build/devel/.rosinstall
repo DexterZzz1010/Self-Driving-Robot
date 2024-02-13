@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/agx/catkin_ws/src/Robot_Control/build/devel/setup.sh
