@@ -1,3 +1,7 @@
+A Bachelor's Degree Thesis
+
+Abstract
+
 In the current societal context, mobile robots have been applied in various fields such as exploring hazardous environments, transporting goods, and providing outdoor cleaning services. The research on mobile robots holds significant practical application value.
 
 This thesis focuses on the outdoor scene perception of mobile robots using four deep learning models. This thesis construct a deep learning environment and investigate issues related to model training and optimization, deployment on embedded systems, and robot motion control. The following achievements have been made:
